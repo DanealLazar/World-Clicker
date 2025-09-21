@@ -10,25 +10,28 @@ import javafx.stage.Stage;
 public class App extends Application {
     public static void main(String[] args) throws Exception {
         try {
-			GlobalScreen.registerNativeHook();
-		}
-		catch (NativeHookException ex) {
-			System.err.println("There was a problem registering the native hook.");
-			System.err.println(ex.getMessage());
+        GlobalScreen.registerNativeHook();
+    } catch (NativeHookException ex) {
+        System.err.println("There was a problem registering the native hook.");
+        System.err.println(ex.getMessage());
+        System.exit(1);
+    }
 
-			System.exit(1);
-		}
+    launch(args);
 
-		GlobalScreen.addNativeKeyListener(new ClickerController());
-        launch(args);
     }
 
     @Override
     public void start(Stage arg0) throws Exception {
-    Parent scene = FXMLLoader.load(getClass().getResource("main.fxml"));
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
+    Parent scene = loader.load();
+
+    ClickerController controller = loader.getController();
+    GlobalScreen.addNativeKeyListener(controller);
 
     arg0.setTitle("hello");
     arg0.setScene(new Scene(scene));
     arg0.show();
+
     }
 }
